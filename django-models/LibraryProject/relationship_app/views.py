@@ -3,11 +3,13 @@ from django.views.generic.detail import DetailView
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import login, logout
 from django.contrib import messages
+from django.contrib.auth.decorators import user_passes_test
+from django.contrib.auth.decorators import permission_required
 from django.contrib.auth.decorators import login_required
 
 from .models import Book, Library
 from .forms import BookForm
-from django.contrib.auth.decorators import user_passes_test, permission_required
+
 
 # -----------------------
 # Function-based view
