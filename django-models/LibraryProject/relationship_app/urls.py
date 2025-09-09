@@ -7,7 +7,9 @@ from .views import (
     member_view,
     add_book,
     edit_book,
-    delete_book
+    delete_book,
+    list_books,          # ✅ Explicit import for function-based view
+    LibraryDetailView    # ✅ Explicit import for class-based view
 )
 
 urlpatterns = [
@@ -29,11 +31,11 @@ urlpatterns = [
     ),
 
     # Books list / home
-    path('', views.list_books, name='home'),
-    path('books/', views.list_books, name='list_books'),
+    path('', list_books, name='home'),   # ✅ updated to direct import
+    path('books/', list_books, name='list_books'),
 
     # Library detail
-    path('library/<int:pk>/', views.LibraryDetailView.as_view(), name='library_detail'),
+    path('library/<int:pk>/', LibraryDetailView.as_view(), name='library_detail'),
 
     # Role-based views
     path('admin-view/', admin_view, name='admin_view'),
