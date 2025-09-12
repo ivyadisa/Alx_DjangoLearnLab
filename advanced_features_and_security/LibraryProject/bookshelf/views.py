@@ -4,6 +4,7 @@ from django.views.decorators.csrf import csrf_protect
 from django.core.exceptions import ValidationError
 from django.utils.html import escape
 from .models import Book
+from .forms import ExampleForm
 
 # All views are protected by permissions, adding csrf_protect for POST requests
 # and get_object_or_404 for safer object retrieval.
@@ -34,7 +35,15 @@ def book_create(request):
 
     return render(request, 'relationship_app/book_form.html')
 
-
+def example_form_view(request):
+    if request.method == "POST":
+        form = ExampleForm(request.POST)
+        if form.is_valid():
+            # Normally save or process data here
+            pass
+    else:
+        form = ExampleForm()
+    return render(request, 'bookshelf/form_example.html', {'form': form})
 @csrf_protect
 @permission_required('relationship_app.can_edit', raise_exception=True)
 @login_required
