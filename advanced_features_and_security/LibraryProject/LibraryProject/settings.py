@@ -64,6 +64,9 @@ CSP_FONT_SRC = ("'self'", 'https://fonts.gstatic.com')
 CSP_IMG_SRC = ("'self'", 'data:')
 # More CSP_* settings can be added depending on your app's resource need
 
+# Trust the X-Forwarded-Proto header set by your proxy (e.g., Nginx, Heroku, AWS ELB)
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
 ROOT_URLCONF = 'LibraryProject.urls'
 
 TEMPLATES = [
