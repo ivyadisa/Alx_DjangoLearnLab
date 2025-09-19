@@ -31,11 +31,13 @@ urlpatterns = [
     ),
 
     # Books list / home
+    
     path('', views.list_books, name='home'),
     path('books/', views.list_books, name='list_books'),
 
     # Library detail
     path('library/<int:pk>/', views.LibraryDetailView.as_view(), name='library_detail'),
+    #path('library_detail/<int:id>/', views.library_detail, name='detail'),
 
     # Role-based views
     path('admin-view/', admin_view, name='admin_view'),

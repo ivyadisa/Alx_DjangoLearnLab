@@ -127,3 +127,9 @@ def delete_book(request, pk):
         book.delete()
         return redirect('list_books')
     return render(request, 'relationship_app/delete_book.html', {'book': book})
+
+#def library_detail (request, id):
+ #   library = get_object_or_404(Library, id=id)
+ #   return render( request, 'relationship_app/library_detail.html', {'library': library})
+
+

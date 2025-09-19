@@ -3,8 +3,16 @@
 <head>
     <title>Book List</title>
 </head>
+     
 <body>
+
+    <nav>
+        <li>  <a href="#"> Home </a></li>
+        <li>  <a href="#"> About Us</a></li>
+        <li>  <a href="#"> Contact Us </a></li>
+    </nav>
     <h1>Books</h1>
+    <h2>Books </h2>
     <ul>
         {% for book in books %}
             <li>{{ book.title|escape }} - {{ book.author|escape }}</li>
@@ -12,5 +20,6 @@
             <li>No books available.</li>
         {% endfor %}
     </ul>
+   
 </body>
 </html>

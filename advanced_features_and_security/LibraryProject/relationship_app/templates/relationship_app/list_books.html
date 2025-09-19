@@ -5,6 +5,11 @@
     <title>List of Books</title>
 </head>
 <body>
+    <nav>
+        <li> <a href="{% url 'home'%}">Home</a></li>
+        <li> <a href="{% url 'list_books' %}"> About Us </a></li>
+        <li> <a href="#">Contact Us </a></li>
+    </nav>
     <h1>Books Available:</h1>
     <ul>
         {% for book in books %}

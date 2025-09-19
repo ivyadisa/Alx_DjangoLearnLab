@@ -1,5 +1,5 @@
 
-import os
+
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -10,10 +10,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-$3z85uj#da+w(^l3c=5=w78-lq=^=9s2uyjxe^#x6qcij#4z8a'
+SECRET_KEY = 'django-insecure-yx@)a1qg4$1u*g+naf8wgaw2ys3#fj-!9we8qn!kz=5@f0=*k-'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True 
+DEBUG = True
 
 ALLOWED_HOSTS = []
 
@@ -27,9 +27,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'bookshelf',
-    'relationship_app',
-    
+    'rest_framework',
+    'api',
 ]
 
 MIDDLEWARE = [
@@ -41,33 +40,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-# Cookies: require HTTPS in production
-SESSION_COOKIE_SECURE = False
-CSRF_COOKIE_SECURE = False
 
-# Additional browser protections
-SECURE_BROWSER_XSS_FILTER = True
-SECURE_CONTENT_TYPE_NOSNIFF = True
-X_FRAME_OPTIONS = 'DENY' # prevent clickjacking
-
-# Recommend also enabling HSTS when running over HTTPS
-SECURE_HSTS_SECONDS = 31536000 # 1 year (enable only when you're fully on HTTPS)
-SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-SECURE_HSTS_PRELOAD = True
-SECURE_SSL_REDIRECT = False
-
-# If you use django-csp, configure a restrictive policy (adapt domains as needed)
-CSP_DEFAULT_SRC = ("'self'",)
-CSP_SCRIPT_SRC = ("'self'",)
-CSP_STYLE_SRC = ("'self'", 'https://fonts.googleapis.com')
-CSP_FONT_SRC = ("'self'", 'https://fonts.gstatic.com')
-CSP_IMG_SRC = ("'self'", 'data:')
-# More CSP_* settings can be added depending on your app's resource need
-
-# Trust the X-Forwarded-Proto header set by your proxy (e.g., Nginx, Heroku, AWS ELB)
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-
-ROOT_URLCONF = 'LibraryProject.urls'
+ROOT_URLCONF = 'api_project.urls'
 
 TEMPLATES = [
     {
@@ -85,7 +59,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'LibraryProject.wsgi.application'
+WSGI_APPLICATION = 'api_project.wsgi.application'
 
 
 # Database
@@ -97,7 +71,6 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-
 
 
 # Password validation
@@ -136,14 +109,7 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
-
-LOGIN_REDIRECT_URL = 'home'
-LOGOUT_REDIRECT_URL = 'login'
-
-
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-AUTH_USER_MODEL = "bookshelf.CustomUser"
-
