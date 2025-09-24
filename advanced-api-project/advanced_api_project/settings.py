@@ -42,6 +42,7 @@ INSTALLED_APPS = [
 
     # Local apps
     'api',
+    'django_filter
 ]
 
 MIDDLEWARE = [
