@@ -1,24 +1,22 @@
 from django.db import models
 
+# Author model stores information about book authors
 class Author(models.Model):
-    """
-    Author model to represent book authors.
-    Each author can have multiple books.
-    """
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=255)  # Name of the author
 
     def __str__(self):
         return self.name
 
 
+# Book model stores information about individual books
 class Book(models.Model):
-    """
-    Book model representing individual books.
-    Each book belongs to one Author.
-    """
-    title = models.CharField(max_length=255)
-    publication_year = models.IntegerField()
-    author = models.ForeignKey(Author, related_name="books", on_delete=models.CASCADE)
+    title = models.CharField(max_length=255)  # Title of the book
+    publication_year = models.IntegerField()  # Year the book was published
+    author = models.ForeignKey(
+        Author,
+        related_name="books",  # Allows accessing an author's books as author.books.all()
+        on_delete=models.CASCADE
+    )
 
     def __str__(self):
-        return f"{self.title} ({self.publication_year})"
+        return self.title

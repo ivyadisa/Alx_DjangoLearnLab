@@ -3,15 +3,13 @@ from .models import Author, Book
 import datetime
 
 
+# Serializer for the Book model
 class BookSerializer(serializers.ModelSerializer):
-    """
-    Serializer for the Book model.
-    Includes validation to ensure publication year is not in the future.
-    """
     class Meta:
         model = Book
         fields = ['id', 'title', 'publication_year', 'author']
 
+    # Custom validation to ensure publication_year is not in the future
     def validate_publication_year(self, value):
         current_year = datetime.date.today().year
         if value > current_year:
@@ -19,11 +17,9 @@ class BookSerializer(serializers.ModelSerializer):
         return value
 
 
+# Serializer for the Author model with nested BookSerializer
 class AuthorSerializer(serializers.ModelSerializer):
-    """
-    Serializer for the Author model.
-    Includes a nested representation of related books.
-    """
+    # Nest the BookSerializer to show related books
     books = BookSerializer(many=True, read_only=True)
 
     class Meta:
