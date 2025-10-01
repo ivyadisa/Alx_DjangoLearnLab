@@ -5,6 +5,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from .models import Profile, Post
 from django.utils import timezone
+from .models import Comment
 
 # -------------------------
 # User registration form
@@ -59,3 +60,11 @@ class PostForm(forms.ModelForm):
         if not data:
             return None
         return data
+
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ['content']
+        widgets = {
+            'content': forms.Textarea(attrs={'rows': 3, 'placeholder': 'Add a comment...'})
+        }
