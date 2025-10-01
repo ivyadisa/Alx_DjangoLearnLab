@@ -4,6 +4,29 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils import timezone
 from django.urls import reverse
+from django.utils.text import slugify
+
+# -------------------------
+# Tag model
+# -------------------------
+class Tag(models.Model):
+    name = models.CharField(max_length=50, unique=True)
+    slug = models.SlugField(max_length=60, unique=True, blank=True)
+
+    class Meta:
+        ordering = ['name']
+
+    def __str__(self):
+        return self.name
+
+    def save(self, *args, **kwargs):
+        # auto-create slug from name if not set
+        if not self.slug:
+            self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
+
+    def get_absolute_url(self):
+        return reverse('posts-by-tag', kwargs={'tag_name': self.slug})
 
 # -------------------------
 # Post model
@@ -13,6 +36,7 @@ class Post(models.Model):
     content = models.TextField(blank=True, default="")
     published_date = models.DateTimeField(default=timezone.now, null=True, blank=True)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
+    tags = models.ManyToManyField(Tag, blank=True, related_name='posts')   
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -69,3 +93,4 @@ class Comment(models.Model):
     def get_absolute_url(self):
         # Redirects back to the post detail page after add/edit/delete
         return reverse('post-detail', kwargs={'pk': self.post.pk})
+
