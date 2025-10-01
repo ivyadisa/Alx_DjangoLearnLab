@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class="card">
+    <div class="card-body">
+      <h4>{{ view.object and "Edit Comment" or "Add Comment" }}</h4>
+      <form method="post">
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+        <div class="form-group">
+          {{ form.content }}
+          {{ form.content.errors }}
+        </div>
+        <button class="btn btn-primary" type="submit">Save</button>
+        <a class="btn btn-secondary" href="{{ view.object.post.get_absolute_url if view.object else post.get_absolute_url }}">Cancel</a>
+      </form>
+    </div>
+  </div>
+{% endblock %}

@@ -3,9 +3,9 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from .models import Profile, Post
+from .models import Profile, Post, Comment
 from django.utils import timezone
-from .models import Comment
+
 
 # -------------------------
 # User registration form
@@ -20,6 +20,7 @@ class UserRegisterForm(UserCreationForm):
         model = User
         fields = ['username', 'email', 'password1', 'password2']
 
+
 # -------------------------
 # User update form
 # -------------------------
@@ -30,6 +31,7 @@ class UserUpdateForm(forms.ModelForm):
         model = User
         fields = ['username', 'email']
 
+
 # -------------------------
 # Profile update form
 # -------------------------
@@ -37,6 +39,7 @@ class ProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
         fields = ['bio', 'profile_image']
+
 
 # -------------------------
 # Post creation / update form
@@ -61,10 +64,16 @@ class PostForm(forms.ModelForm):
             return None
         return data
 
+
+# -------------------------
+# Comment form
+# -------------------------
 class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
         fields = ['content']
         widgets = {
-            'content': forms.Textarea(attrs={'rows': 3, 'placeholder': 'Add a comment...'})
+            'content': forms.Textarea(
+                attrs={'rows': 3, 'placeholder': 'Add a comment...'}
+            )
         }
