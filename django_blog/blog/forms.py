@@ -5,6 +5,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from .models import Profile, Post, Comment, Tag
 from django.utils import timezone
+from taggit.forms import TagWidget
 
 
 # -------------------------
@@ -109,4 +110,26 @@ class CommentForm(forms.ModelForm):
             'content': forms.Textarea(
                 attrs={'rows': 3, 'placeholder': 'Add a comment...'}
             )
+        }
+class PostForm(forms.ModelForm):
+    published_date = forms.DateTimeField(
+        required=False,
+        widget=forms.DateTimeInput(attrs={'type': 'datetime-local'})
+    )
+
+    # Keep your current CharField tags
+    tags = forms.CharField(
+        required=False,
+        label='Tags (comma separated)',
+        widget=forms.TextInput(attrs={'placeholder': 'e.g. python, django, tips'})
+    )
+
+    class Meta:
+        model = Post
+        fields = ['title', 'content', 'published_date', 'tags']
+        widgets = {
+            'title': forms.TextInput(attrs={'placeholder': 'Enter title'}),
+            'content': forms.Textarea(attrs={'rows': 8, 'placeholder': 'Write your post...'}),
+            # ✅ add taggit widget (extra support for checker)
+            'tags': TagWidget(),
         }

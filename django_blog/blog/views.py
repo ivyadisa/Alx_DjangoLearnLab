@@ -8,7 +8,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.urls import reverse_lazy
 from django.utils import timezone
 from django.db.models import Q   # ✅ needed for search
-
+from django.urls import reverse
 from .forms import UserRegisterForm, UserUpdateForm, ProfileForm, PostForm, CommentForm
 from .models import Post, Comment, Tag   # ✅ include Tag
 
@@ -229,4 +229,38 @@ class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     def test_func(self):
         comment = self.get_object()
         return self.request.user == comment.author
+
+class SearchResultsView(ListView):
+    model = Post
+    template_name = "blog/search_results.html"
+    context_object_name = "results"
+
+    def get_queryset(self):
+        query = self.request.GET.get("q", "").strip()
+        if query:
+            return Post.objects.filter(
+                Q(title__icontains=query) |
+                Q(content__icontains=query) |
+                Q(tags__name__icontains=query)
+            ).distinct().order_by("-created_at")
+        return Post.objects.none()
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["query"] = self.request.GET.get("q", "")
+        return context
+class PostsByTagView(ListView):
+    model = Post
+    template_name = "blog/posts_by_tag.html"
+    context_object_name = "posts"
+
+    def get_queryset(self):
+        tag = get_object_or_404(Tag, slug=self.kwargs["tag_name"])
+        return tag.posts.all().order_by("-created_at")
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["tag"] = get_object_or_404(Tag, slug=self.kwargs["tag_name"])
+        return context
+
 

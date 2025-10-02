@@ -5,6 +5,7 @@ from django.dispatch import receiver
 from django.utils import timezone
 from django.urls import reverse
 from django.utils.text import slugify
+from taggit.managers import TaggableManager
 
 # -------------------------
 # Tag model
@@ -36,7 +37,8 @@ class Post(models.Model):
     content = models.TextField(blank=True, default="")
     published_date = models.DateTimeField(default=timezone.now, null=True, blank=True)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
-    tags = models.ManyToManyField(Tag, blank=True, related_name='posts')   
+    #tags = models.ManyToManyField(Tag, blank=True, related_name='posts') 
+    tags = TaggableManager(blank=True)   
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
