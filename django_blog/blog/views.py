@@ -263,4 +263,19 @@ class PostsByTagView(ListView):
         context["tag"] = get_object_or_404(Tag, slug=self.kwargs["tag_name"])
         return context
 
+class PostByTagListView(ListView):
+    model = Post
+    template_name = "blog/posts_by_tag.html"
+    context_object_name = "posts"
+
+    def get_queryset(self):
+        tag = get_object_or_404(Tag, slug=self.kwargs["tag_slug"])
+        return tag.posts.all().order_by("-created_at")
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["tag"] = get_object_or_404(Tag, slug=self.kwargs["tag_slug"])
+        return context
+
+
 

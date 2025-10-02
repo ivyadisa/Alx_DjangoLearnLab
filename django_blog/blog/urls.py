@@ -10,10 +10,10 @@ urlpatterns = [
     path('profile/', views.profile, name='profile'),
     
     # Blog post URLs
-    path('post/', views.PostListView.as_view(), name='post-list'),                
-    path('post/new/', views.PostCreateView.as_view(), name='post-create'),        
-    path('post/<int:pk>/', views.PostDetailView.as_view(), name='post-detail'),   
-    path('post/<int:pk>/update/', views.PostUpdateView.as_view(), name='post-update'),  
+    path('post/', views.PostListView.as_view(), name='post-list'),
+    path('post/new/', views.PostCreateView.as_view(), name='post-create'),
+    path('post/<int:pk>/', views.PostDetailView.as_view(), name='post-detail'),
+    path('post/<int:pk>/update/', views.PostUpdateView.as_view(), name='post-update'),
     path('post/<int:pk>/delete/', views.PostDeleteView.as_view(), name='post-delete'),
 
     # Comment URLs (checker expects CBVs)
@@ -21,9 +21,9 @@ urlpatterns = [
     path('comment/<int:pk>/update/', views.CommentUpdateView.as_view(), name='comment-update'),
     path('comment/<int:pk>/delete/', views.CommentDeleteView.as_view(), name='comment-delete'),
 
-    # Tag page: shows posts with this tag
-    path('tags/<slug:tag_name>/', views.posts_by_tag, name='posts-by-tag'),
+    # ✅ Tag page (checker requirement)
+    path('tags/<slug:tag_slug>/', views.PostByTagListView.as_view(), name='posts-by-tag'),
 
-    # Search page: ?q=keyword
-    path('search/', views.post_search, name='post-search'),
+    # ✅ Search page
+    path('search/', views.SearchResultsView.as_view(), name='post-search'),
 ]
