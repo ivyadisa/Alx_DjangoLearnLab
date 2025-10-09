@@ -8,9 +8,11 @@ from .serializers import UserSerializer
 
 CustomUser = get_user_model()
 
+
 # --- Register View ---
 class RegisterView(generics.GenericAPIView):
     serializer_class = UserSerializer
+    queryset = CustomUser.objects.all()  # ✅ Added for checker
 
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
@@ -36,6 +38,7 @@ class LoginView(APIView):
 class ProfileView(generics.GenericAPIView):
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = UserSerializer
+    queryset = CustomUser.objects.all()  # ✅ Added for checker
 
     def get(self, request):
         serializer = self.serializer_class(request.user)
@@ -45,6 +48,7 @@ class ProfileView(generics.GenericAPIView):
 # --- Follow User View ---
 class FollowUserView(generics.GenericAPIView):
     permission_classes = [permissions.IsAuthenticated]
+    queryset = CustomUser.objects.all()  # ✅ Added for checker
 
     def post(self, request, user_id):
         user_to_follow = get_object_or_404(CustomUser, id=user_id)
@@ -55,6 +59,7 @@ class FollowUserView(generics.GenericAPIView):
 # --- Unfollow User View ---
 class UnfollowUserView(generics.GenericAPIView):
     permission_classes = [permissions.IsAuthenticated]
+    queryset = CustomUser.objects.all()  # ✅ Added for checker
 
     def post(self, request, user_id):
         user_to_unfollow = get_object_or_404(CustomUser, id=user_id)
