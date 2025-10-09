@@ -42,13 +42,12 @@ class StandardResultsSetPagination(PageNumberPagination):
     page_size_query_param = 'page_size'
 
 
-class FeedView(APIView):
+class FeedView(generics.GenericAPIView):
     permission_classes = [permissions.IsAuthenticated]
+    serializer_class = PostSerializer
 
-    def get(self, request, format=None):
-        following_qs = request.user.following.all()
-        posts_qs = Post.objects.filter(author__in=following_qs).order_by('-created_at')
-        paginator = StandardResultsSetPagination()
-        page = paginator.paginate_queryset(posts_qs, request)
-        serializer = PostSerializer(page, many=True, context={'request': request})
-        return paginator.get_paginated_response(serializer.data)
+    def get(self, request):
+        following_users = request.user.following.all()
+        posts = Post.objects.filter(author__in=following_users).order_by('-created_at')
+        serializer = self.serializer_class(posts, many=True)
+        return Response(serializer.data)
