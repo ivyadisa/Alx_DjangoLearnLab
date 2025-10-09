@@ -1,14 +1,13 @@
 from django.contrib.auth import get_user_model, authenticate
 from rest_framework import serializers
-from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework.authtoken.models import Token
 
 User = get_user_model()
 
-
 # ------------------ Register Serializer ------------------
 class RegisterSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(write_only=True, required=True, style={'input_type': 'password'})
-    password2 = serializers.CharField(write_only=True, required=True, style={'input_type': 'password'})
+    password = serializers.CharField(write_only=True, required=True)
+    password2 = serializers.CharField(write_only=True, required=True)
 
     class Meta:
         model = User
@@ -22,6 +21,8 @@ class RegisterSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         validated_data.pop('password2')
         user = get_user_model().objects.create_user(**validated_data)
+        # Create auth token after user registration
+        Token.objects.create(user=user)
         return user
 
 
@@ -37,14 +38,11 @@ class LoginSerializer(serializers.Serializer):
 
         user = authenticate(username=username, password=password)
         if not user:
-            raise serializers.ValidationError("Invalid credentials.")
+            raise serializers.ValidationError("Invalid credentials")
 
-        # Generate JWT token
-        refresh = RefreshToken.for_user(user)
-        data['token'] = {
-            'refresh': str(refresh),
-            'access': str(refresh.access_token)
-        }
+        # Retrieve or create a token for the user
+        token, created = Token.objects.get_or_create(user=user)
+        data['token'] = token.key
         return data
 
 

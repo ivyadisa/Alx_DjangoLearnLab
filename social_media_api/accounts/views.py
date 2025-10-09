@@ -7,14 +7,14 @@ from .serializers import RegisterSerializer, LoginSerializer, UserSerializer
 User = get_user_model()
 
 
-# ------------------ Register View ------------------
+# Register View
 class RegisterView(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = RegisterSerializer
     permission_classes = [AllowAny]
 
 
-# ------------------ Login View ------------------
+# Login View
 class LoginView(generics.GenericAPIView):
     serializer_class = LoginSerializer
     permission_classes = [AllowAny]
@@ -25,7 +25,7 @@ class LoginView(generics.GenericAPIView):
         return Response(serializer.validated_data, status=status.HTTP_200_OK)
 
 
-# ------------------ Profile View ------------------
+# Profile View
 class ProfileView(generics.RetrieveAPIView):
     serializer_class = UserSerializer
     permission_classes = [IsAuthenticated]
