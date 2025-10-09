@@ -1,38 +1,55 @@
+from django.contrib.auth import get_user_model, authenticate
 from rest_framework import serializers
-from .models import CustomUser
-from django.contrib.auth import authenticate
-from rest_framework.authtoken.models import Token
+from rest_framework_simplejwt.tokens import RefreshToken
 
-class UserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = CustomUser
-        fields = ['id', 'username', 'email', 'bio', 'profile_picture', 'followers']
+User = get_user_model()
 
 
+# ------------------ Register Serializer ------------------
 class RegisterSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(write_only=True)
+    password = serializers.CharField(write_only=True, required=True, style={'input_type': 'password'})
+    password2 = serializers.CharField(write_only=True, required=True, style={'input_type': 'password'})
 
     class Meta:
-        model = CustomUser
-        fields = ['username', 'email', 'password']
+        model = User
+        fields = ['id', 'username', 'email', 'password', 'password2']
+
+    def validate(self, data):
+        if data['password'] != data['password2']:
+            raise serializers.ValidationError("Passwords do not match.")
+        return data
 
     def create(self, validated_data):
-        user = CustomUser.objects.create_user(
-            username=validated_data['username'],
-            email=validated_data.get('email'),
-            password=validated_data['password']
-        )
-        Token.objects.create(user=user)
+        validated_data.pop('password2')
+        user = get_user_model().objects.create_user(**validated_data)
         return user
 
 
+# ------------------ Login Serializer ------------------
 class LoginSerializer(serializers.Serializer):
     username = serializers.CharField()
     password = serializers.CharField(write_only=True)
+    token = serializers.CharField(read_only=True)
 
     def validate(self, data):
-        user = authenticate(**data)
-        if user:
-            token, created = Token.objects.get_or_create(user=user)
-            return {'user': user, 'token': token.key}
-        raise serializers.ValidationError("Invalid credentials")
+        username = data.get('username')
+        password = data.get('password')
+
+        user = authenticate(username=username, password=password)
+        if not user:
+            raise serializers.ValidationError("Invalid credentials.")
+
+        # Generate JWT token
+        refresh = RefreshToken.for_user(user)
+        data['token'] = {
+            'refresh': str(refresh),
+            'access': str(refresh.access_token)
+        }
+        return data
+
+
+# ------------------ User Serializer ------------------
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'email']
