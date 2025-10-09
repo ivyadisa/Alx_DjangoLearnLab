@@ -29,6 +29,7 @@ INSTALLED_APPS = [
     'posts',
     'rest_framework',
     'accounts',
+    'notifications'
 ]
 
 MIDDLEWARE = [
