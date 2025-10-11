@@ -13,7 +13,7 @@ class IsOwnerOrReadOnly(permissions.BasePermission):
     Custom permission to only allow owners of an object to edit or delete it.
     """
     def has_object_permission(self, request, view, obj):
-        # Read-only permissions for GET, HEAD, OPTIONS requests
+        # Read-only permissions for GET, HEAD, OPTIONS request
         if request.method in permissions.SAFE_METHODS:
             return True
         # Only allow the owner to modify
@@ -59,14 +59,11 @@ class LikePostView(generics.GenericAPIView):
 
     def post(self, request, pk):
         post = generics.get_object_or_404(Post, pk=pk)
-
-        # Use get_or_create to ensure a like is created only once
         like, created = Like.objects.get_or_create(user=request.user, post=post)
 
         if not created:
             return Response({'message': 'You have already liked this post.'}, status=status.HTTP_400_BAD_REQUEST)
 
-        # Create notification for the post author
         Notification.objects.create(
             recipient=post.author,
             actor=request.user,
