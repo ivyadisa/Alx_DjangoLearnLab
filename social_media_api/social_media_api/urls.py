@@ -6,6 +6,6 @@ def home(request):
     return HttpResponse("Welcome to the Social Media API 🚀")
 
 urlpatterns = [
-    path('', include('accounts.urls')),
+    path('api/accounts', include('accounts.urls')),
     path('api/posts/', include('posts.urls')),
 ]
